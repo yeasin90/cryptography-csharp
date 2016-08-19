@@ -16,7 +16,144 @@ namespace Cryptography
             //Hmac();
             //PasswordWithSalt();
             //PasswordWithPBKDF();
+            //EncryptDecryptWithDES();
+            //EncryptDecryptWithTripleDES();
+            //EncryptDecryptWithRSAWithRSAParameterKey();
+            //EncryptDecryptWithRSAWithXML();
+            //EncryptDecryptWithRSAWithCSPKey();
             Console.ReadLine();
+        }
+
+        public static void EncryptDecryptWithRSAWithCSPKey()
+        {
+            var rsaCsp = new RSAWithCSPKey();
+            const string original = "Text to encrypt";
+
+            rsaCsp.AssignNewKey();
+
+            var encryptedCsp = rsaCsp.EncryptData(Encoding.UTF8.GetBytes(original));
+            var decryptedCsp = rsaCsp.DecryptData(encryptedCsp);
+
+            rsaCsp.DeleteKeyInCsp();
+
+            Console.WriteLine("CSP Based Key");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("Original Text = " + original);
+            Console.WriteLine();
+            Console.WriteLine("Encrypted Text = " + Convert.ToBase64String(encryptedCsp));
+            Console.WriteLine();
+            Console.WriteLine("Decrypted Text = " + Encoding.Default.GetString(decryptedCsp));
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
+        public static void EncryptDecryptWithRSAWithXML()
+        {
+            var rsa = new RSAWithXMLKey();
+            const string original = "Text to encrypt";
+            const string publicKeyPath = "c:\\temp\\publickey.xml";
+            const string privateKeyPath = "c:\\temp\\privatekey.xml";
+
+            rsa.AssignNewKey(publicKeyPath, privateKeyPath);
+
+            var encrypted = rsa.EncryptData(publicKeyPath,Encoding.UTF8.GetBytes(original));
+            var decrypt = rsa.DecryptData(privateKeyPath, encrypted);
+
+            Console.WriteLine("Xml Based Key");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("Original Text = " + original);
+            Console.WriteLine();
+            Console.WriteLine("Encrypted Text = " + Convert.ToBase64String(encrypted));
+            Console.WriteLine();
+            Console.WriteLine("Decrypted Text = " + Encoding.Default.GetString(decrypt));
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
+        public static void EncryptDecryptWithRSAWithRSAParameterKey()
+        {
+            var rsaParams = new RSAWithRSAParameterKey();
+            const string original = "Text to encrypt";
+
+            rsaParams.AssignNewKey();
+
+            var encryptedRsaParams = rsaParams.EncryptData(Encoding.UTF8.GetBytes(original));
+            var decryptedRsaParams = rsaParams.DecryptData(encryptedRsaParams);
+
+            Console.WriteLine("RSA Encryption Demonstration in .NET");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("In Memory Key");
+            Console.WriteLine();
+            Console.WriteLine("Original Text = " + original);
+            Console.WriteLine();
+            Console.WriteLine("Encrypted Text = " + Convert.ToBase64String(encryptedRsaParams));
+            Console.WriteLine();
+            Console.WriteLine("Decrypted Text = " + Encoding.Default.GetString(decryptedRsaParams));
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
+        public static void EncryptDecryptWithAES()
+        {
+            var des = new AESEncryption();
+            var key = des.GenerateRandomNumber(32);
+            var iv = des.GenerateRandomNumber(16);
+            const string original = "Text to encrypt";
+
+            var encrypted = des.Encrypt(Encoding.UTF8.GetBytes(original), key, iv);
+            var decrypted = des.Decrypt(encrypted, key, iv);
+
+            var decryptedMessage = Encoding.UTF8.GetString(decrypted);
+
+            Console.WriteLine("AES Encryption Demonstration in .NET");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("Original Text = " + original);
+            Console.WriteLine("Encrypted Text = " + Convert.ToBase64String(encrypted));
+            Console.WriteLine("Decrypted Text = " + decryptedMessage);
+        }
+
+        public static void EncryptDecryptWithTripleDES()
+        {
+            var des = new TripleDesEncryption();
+            var key = des.GenerateRandomNumber(24);
+            var iv = des.GenerateRandomNumber(8);
+            const string original = "Text to encrypt";
+
+            var encrypted = des.Encrypt(Encoding.UTF8.GetBytes(original), key, iv);
+            var decrypted = des.Decrypt(encrypted, key, iv);
+
+            var decryptedMessage = Encoding.UTF8.GetString(decrypted);
+
+            Console.WriteLine("Triple DES Encryption Demonstration in .NET");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("Original Text = " + original);
+            Console.WriteLine("Encrypted Text = " + Convert.ToBase64String(encrypted));
+            Console.WriteLine("Decrypted Text = " + decryptedMessage);
+        }
+
+        public static void EncryptDecryptWithDES()
+        {
+            var des = new DesEncryption();
+            var key = des.GenerateRandomNumber(8);
+            var iv = des.GenerateRandomNumber(8);
+            const string original = "Text to encrypt";
+
+            var encrypted = des.Encrypt(Encoding.UTF8.GetBytes(original), key, iv);
+            var decrypted = des.Decrypt(encrypted, key, iv);
+
+            var decryptedMessage = Encoding.UTF8.GetString(decrypted);
+
+            Console.WriteLine("DES Encryption Demonstration in .NET");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("Original Text = " + original);
+            Console.WriteLine("Encrypted Text = " + Convert.ToBase64String(encrypted));
+            Console.WriteLine("Decrypted Text = " + decryptedMessage);
         }
 
         public static void PasswordWithPBKDF()
