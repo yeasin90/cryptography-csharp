@@ -44,8 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsymmetricEncryption.cs" />
+    <Compile Include="DigitalSignature.cs" />
     <Compile Include="HashData.cs" />
     <Compile Include="HMAC.cs" />
+    <Compile Include="HybridEncryption.cs" />
+    <Compile Include="HybridEncryptionIntegrity.cs" />
     <Compile Include="PasswordSecurity.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

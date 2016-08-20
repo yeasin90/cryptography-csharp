@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,91 @@ namespace Cryptography
             //EncryptDecryptWithRSAWithRSAParameterKey();
             //EncryptDecryptWithRSAWithXML();
             //EncryptDecryptWithRSAWithCSPKey();
+            //HyrbidEncrypDecrypt();
+            //HybridIntergityCheckEncrypDecrypt();
+            //DigitalSignatureExample();
             Console.ReadLine();
+        }
+
+        public static void DigitalSignatureExample()
+        {
+            var document = Encoding.UTF8.GetBytes("Document to Sign");
+            byte[] hashedDocument;
+
+            using (var sha256 = SHA256.Create())
+            {
+                hashedDocument = sha256.ComputeHash(document);
+            }
+
+            var digitalSignature = new DigitalSignatureImp();
+            digitalSignature.AssignNewKey();
+
+            var signature = digitalSignature.SignData(hashedDocument);
+            var verified = digitalSignature.VerifySignature(hashedDocument, signature);
+
+            Console.WriteLine("Digital Signature Demonstration in .NET");
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Original Text = " + 
+                Encoding.Default.GetString(document));
+
+            Console.WriteLine();
+            Console.WriteLine("Digital Signature = " + 
+                Convert.ToBase64String(signature));
+
+            Console.WriteLine();
+            Console.WriteLine(verified
+                ? "The digital signature has been correctly verified"
+                : "The digital signature has NOT been correctly verified");
+        }
+
+        public static void HybridIntergityCheckEncrypDecrypt()
+        {
+            const string original = "Very secret and important information that can not into the hacker.";
+
+            var hybrid = new HybridEncryptionIntegirtyCheck();
+
+            var rsaParams = new RSAWithRSAParameterKey();
+            rsaParams.AssignNewKey();
+
+            Console.WriteLine("Hybrid Encryption with Integrity Check Demonstration in .NET");
+            Console.WriteLine("------------------------------------------------------------");
+            Console.WriteLine();
+
+            try
+            {
+                var encryptedBlock = hybrid.EncryptData(Encoding.UTF8.GetBytes(original), rsaParams);
+                var decrypted = hybrid.DecryptData(encryptedBlock, rsaParams);
+
+                Console.WriteLine("Original Message = " + original);
+                Console.WriteLine();
+                Console.WriteLine("Message After Decryption = " + Encoding.UTF8.GetString(decrypted));
+            }
+            catch(CryptographicException ex)
+            {
+                Console.WriteLine("Error : " + ex.Message);
+            }
+        }
+
+        public static void HyrbidEncrypDecrypt()
+        {
+            const string original = "Very secret and important information that can not into the hacker.";
+
+            var rsaParams = new RSAWithRSAParameterKey();
+            rsaParams.AssignNewKey();
+
+            var hybrid = new HybridEncryption();
+
+            var encryptedBlock = hybrid.EncryptData(Encoding.UTF8.GetBytes(original), rsaParams);
+            var decrypted = hybrid.DecryptData(encryptedBlock, rsaParams);
+
+            Console.WriteLine("Hybrid Encryption Demonstration in .NET");
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("Original Message = " + original);
+            Console.WriteLine();
+            Console.WriteLine("Message After Decruption = " + Encoding.UTF8.GetString(decrypted));
         }
 
         public static void EncryptDecryptWithRSAWithCSPKey()
